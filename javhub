@@ -1,0 +1,123 @@
+js=
+function bs_encode(buffer) {
+ var xx88aa = "23456789ABCDEFGHJKLNMPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz1";
+
+ var xx88aa_MAP = {};
+
+ var i = 0;
+
+ while (i < xx88aa.length) {
+ xx88aa_MAP[xx88aa.charAt(i)] = i;
+ i++;
+ }
+ var carry, digits, j;
+ if (buffer.length === 0) {
+ return "";
+ }
+ i = void 0;
+ j = void 0;
+ digits = [0];
+ i = 0;
+ while (i < buffer.length) {
+ j = 0;
+ while (j < digits.length) {
+ digits[j] <<= 8;
+ j++;
+ }
+ digits[0] += buffer[i];
+ carry = 0;
+ j = 0;
+ while (j < digits.length) {
+ digits[j] += carry;
+ carry = (digits[j] / 58) | 0;
+ digits[j] %= 58;
+ ++j;
+ }
+ while (carry) {
+ digits.push(carry % 58);
+ carry = (carry / 58) | 0;
+ }
+ i++;
+ }
+ i = 0;
+ while (buffer[i] === 0 && i < buffer.length - 1) {
+ digits.push(0);
+ i++;
+ }
+ return digits.reverse().map(function (digit) {
+ return xx88aa[digit];
+ }).join("");
+ }
+function b_encode(text) {
+ var bytes = [];
+ for (var i = 0; i < text.length; i++) {
+ bytes.push(text[i].charCodeAt(0));
+ }
+ return bs_encode(bytes);
+ }
+function bs_decode(string) {
+ var xx88aa = "789ABCDEFGHJKLNMPQRSTUVWX23456YZabcdefghijkmnopqrstuvwxyz1";
+
+ var xx88aa_MAP = {};
+
+ var i = 0;
+
+ while (i < xx88aa.length) {
+ xx88aa_MAP[xx88aa.charAt(i)] = i;
+ i++;
+ }
+
+ var bytes, c, carry, j;
+ if (string.length === 0) {
+ return [];
+ }
+ i = void 0;
+ j = void 0;
+ bytes = [0];
+ i = 0;
+ while (i < string.length) {
+ c = string[i];
+ if (!(c in xx88aa_MAP)) {
+ throw "Base58.decode received unacceptable input. Character '" + c + "' is not in the Base58 xx88aa.";
+ }
+ j = 0;
+ while (j < bytes.length) {
+ bytes[j] *= 58;
+ j++;
+ }
+ bytes[0] += xx88aa_MAP[c];
+ carry = 0;
+ j = 0;
+ while (j < bytes.length) {
+ bytes[j] += carry;
+ carry = bytes[j] >> 8;
+ bytes[j] &= 0xff;
+ ++j;
+ }
+ while (carry) {
+ bytes.push(carry & 0xff);
+ carry >>= 8;
+ }
+ i++;
+ }
+ i = 0;
+ while (string[i] === "1" && i < string.length - 1) {
+ bytes.push(0);
+ i++;
+ }
+ return bytes.reverse();
+ }
+function b_decode(text) {
+ var bytes = bs_decode(text);
+ var str = '';
+ for (var i = 0; i < bytes.length; i++) {
+ str += String.fromCharCode(bytes[i]);
+ }
+ return str;
+ }
+var initsrc=e2Rex(getCode(),".get(button.playbtn).a(data-src)");
+var inittrack=e2Rex(getCode(),".get(button.playbtn).a(data-track)");
+ var track = b_decode(inittrack);
+ var rurlarr = b_decode(initsrc);
+ var resp=JZ(JSON.stringify({url:'https://javhub.net/playapi', post:{'data': b_encode(rurlarr)}}));
+ b_decode(JSON.parse(resp.code).playurl);
