@@ -1,4 +1,3 @@
-js=
 function bs_encode(buffer) {
  var xx88aa = "23456789ABCDEFGHJKLNMPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz1";
 
