@@ -114,9 +114,3 @@ function b_decode(text) {
  }
  return str;
  }
-var initsrc=e2Rex(getCode(),".get(button.playbtn).a(data-src)");
-var inittrack=e2Rex(getCode(),".get(button.playbtn).a(data-track)");
- var track = b_decode(inittrack);
- var rurlarr = b_decode(initsrc);
- var resp=JZ(JSON.stringify({url:'https://javhub.net/playapi', post:{'data': b_encode(rurlarr)}}));
- b_decode(JSON.parse(resp.code).playurl);
